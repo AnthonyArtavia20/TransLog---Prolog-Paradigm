@@ -1,0 +1,84 @@
+% Base de datos de traducciones español-inglés
+trad("uno", "one").
+trad("dos", "two").
+trad("tres", "three").
+trad("cuatro", "four").
+trad("cinco", "five").
+trad("seis", "six").
+trad("siete", "seven").
+trad("ocho", "eight").
+trad("nueve", "nine").
+trad("diez", "ten").
+trad("veinte", "twenty").
+trad("treinta", "thirty").
+trad("cuarenta", "forty").
+trad("cincuenta", "fifty").
+trad("sesenta", "sixty").
+trad("setenta", "seventy").
+trad("ochenta", "eighty").
+trad("noventa", "ninety").
+trad("cien", "onehundred").
+trad("ciento", "onehundred").
+trad("once","eleven").
+trad("doce", "twelve").
+trad("trece", "thirteen").
+trad("docientos","twohundred").
+
+% Lista completa de números reconocidos
+num("uno").
+num("dos").
+num("tres").
+num("cuatro").
+num("cinco").
+num("seis").
+num("siete").
+num("ocho").
+num("nueve").
+num("diez").
+num("veinte").
+num("treinta").
+num("cuarenta").
+num("cincuenta").
+num("sesenta").
+num("setenta").
+num("ochenta").
+num("noventa").
+num("cien").
+num("one").
+num("two").
+num("three").
+num("four").
+num("five").
+num("six").
+num("seven").
+num("eight").
+num("nine").
+num("ten").
+num("twenty").
+num("thirty").
+num("forty").
+num("fifty").
+num("sixty").
+num("seventy").
+num("eighty").
+num("ninety").
+num("onehundred").
+num("twelve").
+num("thirteen").
+
+decena("twenty").
+decena("thirty").
+decena("forty").
+decena("fifty").
+decena("sixty").
+decena("seventy").
+decena("eighty").
+decena("ninety").
+decena("onehundred").
+
+
+% Lenguajes soportados
+lenguaje("ingles", 1).
+lenguaje("español", 2).
+lenguaje("english", 1).
+lenguaje("spanish", 2).

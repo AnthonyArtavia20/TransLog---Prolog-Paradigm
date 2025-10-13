@@ -1,0 +1,71 @@
+:- include('Data_Base.pl').
+
+% Verificar si existe un lenguaje
+existe_lenguaje(X) :-
+    lenguaje(X, _).
+
+% Caso para dieciseis - diecinueve (español -> inglés)
+generar_traduccion_compuesta(P, Traduccion) :-
+    sub_string(P, 0, 5, RestoLen, "dieci"),
+    RestoLen > 0,
+    sub_string(P, 5, RestoLen, 0, Resto),
+    trad(Resto, TradResto),
+    combinar_strings(TradResto, "teen", Traduccion).
+
+% Caso para thirteen-nineteen (inglés -> español)
+generar_traduccion_compuesta(P, Traduccion):-
+    sub_string(P, _, 4, 0, "teen"),
+    string_length(P, Len),
+    Len > 4,
+    SubLen is Len - 4,
+    sub_string(P, 0, SubLen, 4, Resto),
+    trad(TradResto, Resto),
+    combinar_strings("dieci", TradResto, Traduccion).
+
+% Caso para veintiuno - veintinueve (español -> inglés)
+generar_traduccion_compuesta(P, Traduccion) :-
+    sub_string(P, 0, 6, RestoLen, "veinti"),
+    RestoLen > 0,
+    sub_string(P, 6, RestoLen, 0, Resto),
+    trad(Resto, TradResto),
+    combinar_strings("twenty", TradResto, Traduccion).
+
+% Función auxiliar para combinar strings
+combinar_strings(String1, String2, Resultado) :-
+    string_concat(String1, String2, Resultado).
+
+% Separar texto en palabras
+separar(Texto, Palabras) :-
+    split_string(Texto, " ", "", Palabras).
+
+% Traducción individual
+traducir(X, K):-
+    K == 1,
+    trad(Y, X),
+    write(Y), write(' '), !.
+
+traducir(X, K):-
+    K == 2,
+    (trad(X, Y) ; generar_traduccion_compuesta(X, Y)),
+    write(Y), write(' '), !.
+
+traducir(_, _):-
+    write("[?] ").
+
+% Lógica principal de procesamiento
+mostrar_palabras(Lista, K) :-
+    reverse(Lista, ListaInvertida),
+    mostrar_palabras_aux(ListaInvertida, K).
+
+mostrar_palabras_aux([Palabra, "y", Palabra2|Resto], K) :-
+    K == 2,
+    num(Palabra),
+    num(Palabra2),
+    mostrar_palabras_aux([Palabra2|Resto], K),
+    traducir(Palabra, K).
+
+mostrar_palabras_aux([Palabra|Resto], K) :-
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+
+mostrar_palabras_aux([], _).
