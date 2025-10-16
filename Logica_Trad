@@ -47,10 +47,11 @@ traducir(X, K):-
 traducir(X, K):-
     K == 2,
     (trad(X, Y) ; generar_traduccion_compuesta(X, Y)),
-    write(Y), write(' '), !.
+    write(Y), write('[?] '), !.
 
-traducir(_, _):-
-    write("[?] ").
+traducir(X, _):-
+    write(X),
+    write(" ").
 
 % Lógica principal de procesamiento
 mostrar_palabras(Lista, K) :-
@@ -63,6 +64,20 @@ mostrar_palabras_aux([Palabra, "y", Palabra2|Resto], K) :-
     num(Palabra2),
     mostrar_palabras_aux([Palabra2|Resto], K),
     traducir(Palabra, K).
+
+mostrar_palabras_aux([Palabra, "are", Palabra2|Resto], K):-
+    K == 1,
+    Palabra2 == "we",
+    write("nosotros somos "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+mostrar_palabras_aux([Palabra, "are", Palabra2|Resto], K):-
+    K == 1,
+    Palabra2 == "they",
+    write("ellos son "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+
 
 mostrar_palabras_aux([Palabra|Resto], K) :-
     mostrar_palabras_aux(Resto, K),

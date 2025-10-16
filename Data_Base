@@ -1,4 +1,5 @@
 % Base de datos de traducciones español-inglés
+% Numeros
 trad("uno", "one").
 trad("dos", "two").
 trad("tres", "three").
@@ -23,6 +24,29 @@ trad("once","eleven").
 trad("doce", "twelve").
 trad("trece", "thirteen").
 trad("docientos","twohundred").
+
+trad("hola","hi").
+trad("yo", "i").
+trad("soy","am").
+trad("ella","she").
+trad("el","he").
+trad("es","is").
+trad("ellos","they").
+
+trad("nosotros","we").
+
+trad("mi","my").
+
+trad("el","the").
+
+trad("amigos","friends").
+trad("amigo","friend").
+trad("gato","cat").
+
+
+trad("negro","black").
+
+
 
 % Lista completa de números reconocidos
 num("uno").
