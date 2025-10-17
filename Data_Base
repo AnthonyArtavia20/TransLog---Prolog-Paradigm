@@ -31,11 +31,9 @@ trad("soy","am").
 trad("ella","she").
 trad("el","he").
 trad("es","is").
-trad("ellos","they").
+trad("son","are").
 
-trad("nosotros","we").
-
-trad("mi","my").
+trad("y", "and").
 
 trad("el","the").
 
@@ -46,6 +44,15 @@ trad("gato","cat").
 
 trad("negro","black").
 
+%palabras en singular
+sing("is").
+sing("am").
+sing("friend").
+
+%palabras en plural
+plur("are").
+plur("amigos").
+plur("friends").
 
 
 % Lista completa de números reconocidos
