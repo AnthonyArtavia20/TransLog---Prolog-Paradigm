@@ -12,15 +12,16 @@ generar_traduccion_compuesta(P, Traduccion) :-
     trad(Resto, TradResto),
     combinar_strings(TradResto, "teen", Traduccion).
 
-% Caso para thirteen-nineteen (inglés -> español)
+% Caso mejorado para inglés -> español
 generar_traduccion_compuesta(P, Traduccion):-
     sub_string(P, _, 4, 0, "teen"),
     string_length(P, Len),
     Len > 4,
     SubLen is Len - 4,
     sub_string(P, 0, SubLen, 4, Resto),
-    trad(TradResto, Resto),
-    combinar_strings("dieci", TradResto, Traduccion).
+    mapear_raiz_teen(Resto, RaizEspanol),
+    combinar_strings("dieci", RaizEspanol, Traduccion).
+
 
 % Caso para veintiuno - veintinueve (español -> inglés)
 generar_traduccion_compuesta(P, Traduccion) :-
@@ -29,6 +30,21 @@ generar_traduccion_compuesta(P, Traduccion) :-
     sub_string(P, 6, RestoLen, 0, Resto),
     trad(Resto, TradResto),
     combinar_strings("twenty", TradResto, Traduccion).
+
+% Mapeo completo de raíces teen a español
+mapear_raiz_teen("thir", "tre").
+mapear_raiz_teen("four", "cua").
+mapear_raiz_teen("fif", "quin").
+mapear_raiz_teen("six", "seis").
+mapear_raiz_teen("seven", "siete").
+mapear_raiz_teen("eigh", "diecio").
+mapear_raiz_teen("nine", "nueve").
+
+% Para casos regulares que coinciden con traducciones existentes
+mapear_raiz_teen(Resto, RaizEspanol) :-
+    trad(TradResto, Resto),
+    RaizEspanol = TradResto.
+
 
 % Función auxiliar para combinar strings
 combinar_strings(String1, String2, Resultado) :-
@@ -41,8 +57,10 @@ separar(Texto, Palabras) :-
 % Traducción individual
 traducir(X, K):-
     K == 1,
-    trad(Y, X),
-    write(Y), write(' '), !.
+    (trad(Y, X) ; generar_traduccion_compuesta(X, Y)),
+    write(Y),
+    write(' '),
+    !.
 
 traducir(X, K):-
     K == 2,
@@ -55,7 +73,6 @@ traducir(X, _):-
 
 % Lógica principal de procesamiento
 mostrar_palabras(Lista, K) :-
-    writeln(Lista),
     mostrar_palabras_aux(Lista, K).
 
 %casos para numeros como Ochenta y ocho
