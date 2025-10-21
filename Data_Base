@@ -55,6 +55,8 @@ nom("niño").
 nom("kid").
 nom("manzana").
 nom("apple").
+nom("amigos").
+nom("amigas").
 
 %verbos
 verb("come").
@@ -65,12 +67,23 @@ deter("el").
 deter("the").
 deter("la").
 
+%femenino
+fem("manzana").
+fem("amigas").
+fem("apple").
+
+%masculino
+mas("gato").
+mas("amigos").
 
 
 %palabras en singular
 sing("is").
 sing("am").
 sing("friend").
+sing("gato").
+sing("manzana").
+sing("apple").
 
 %palabras en plural
 plur("are").

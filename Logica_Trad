@@ -76,14 +76,12 @@ traducir(X, _):-
 revisa_oracion([],_).
 
 revisa_oracion([Nom, Verb, Nom2|Resto], K):-
-    K = 2,
     nom(Nom),
     verb(Verb),
     nom(Nom2),
     revisa_oracion(Resto, K).
 
 revisa_oracion([Det, Nom, Verb, Nom2|Resto], K):-
-    K = 2,
     deter(Det),
     nom(Nom),
     verb(Verb),
@@ -91,7 +89,6 @@ revisa_oracion([Det, Nom, Verb, Nom2|Resto], K):-
     revisa_oracion(Resto, K).
 
 revisa_oracion([Det, Nom, Verb, Det2, Nom2|Resto], K):-
-    K = 2,
     deter(Det),
     nom(Nom),
     verb(Verb),
@@ -100,7 +97,6 @@ revisa_oracion([Det, Nom, Verb, Det2, Nom2|Resto], K):-
     revisa_oracion(Resto, K).
 
 revisa_oracion([Nom, Verb, Det2, Nom2|Resto], K):-
-    K = 2,
     nom(Nom),
     verb(Verb),
     deter(Det2),
@@ -141,6 +137,21 @@ mostrar_palabras_aux([Palabra, "somos", Palabra2|Resto], K):-
     mostrar_palabras_aux(Resto, K),
     traducir(Palabra, K).
 
+mostrar_palabras_aux([ "the", Palabra|Resto], K):-
+    K == 1,
+    fem(Palabra),
+    sing(Palabra),
+    write("la "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+
+mostrar_palabras_aux([ "the", Palabra|Resto], K):-
+    K == 1,
+    mas(Palabra),
+    sing(Palabra),
+    write("el "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
 
 
 %casos para cuando se escribe they are/ellos son
