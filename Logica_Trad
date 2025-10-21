@@ -51,8 +51,22 @@ combinar_strings(String1, String2, Resultado) :-
     string_concat(String1, String2, Resultado).
 
 % Separar texto en palabras
-separar(Texto, Palabras) :-
-    split_string(Texto, " ", "", Palabras).
+separar(Texto, Palabras2) :-
+    split_string(Texto, " ", "", Palabras),
+    separar_aux(Palabras, Palabras2).
+
+separar_aux([], []).
+
+separar_aux([H|T], R):-
+    string_chars(H, Chars),
+    append(Base, ['.'], Chars),
+    !,
+    string_chars(SinPunto, Base),
+    separar_aux(T, Resto),
+    R = [SinPunto, "."|Resto].
+
+separar_aux([H|T], [H|Resto]):-
+    separar_aux(T, Resto).
 
 % Traducción individual
 traducir(X, K):-
@@ -73,22 +87,37 @@ traducir(X, _):-
     write(X),
     write(" ").
 
+traducir(X, K, _):-
+    K == 1,
+    trad(Y, X),
+    write(Y),
+    write(". ").
+
+traducir(X, K, _):-
+    K == 2,
+    trad(X, Y),
+    write(Y),
+    write(". ").
+
+
+%Funcion para revisar oraciones
+
 revisa_oracion([],_).
 
-revisa_oracion([Nom, Verb, Nom2|Resto], K):-
+revisa_oracion([Nom, Verb, Nom2, "."|Resto], K):-
     nom(Nom),
     verb(Verb),
     nom(Nom2),
     revisa_oracion(Resto, K).
 
-revisa_oracion([Det, Nom, Verb, Nom2|Resto], K):-
+revisa_oracion([Det, Nom, Verb, Nom2, "."|Resto], K):-
     deter(Det),
     nom(Nom),
     verb(Verb),
     nom(Nom2),
     revisa_oracion(Resto, K).
 
-revisa_oracion([Det, Nom, Verb, Det2, Nom2|Resto], K):-
+revisa_oracion([Det, Nom, Verb, Det2, Nom2, "."|Resto], K):-
     deter(Det),
     nom(Nom),
     verb(Verb),
@@ -96,7 +125,7 @@ revisa_oracion([Det, Nom, Verb, Det2, Nom2|Resto], K):-
     nom(Nom2),
     revisa_oracion(Resto, K).
 
-revisa_oracion([Nom, Verb, Det2, Nom2|Resto], K):-
+revisa_oracion([Nom, Verb, Det2, Nom2, "."|Resto], K):-
     nom(Nom),
     verb(Verb),
     deter(Det2),
@@ -108,11 +137,14 @@ revisa_oracion([Nom, Verb, Det2, Nom2|Resto], K):-
 % Lógica principal de procesamiento
 mostrar_palabras(Lista, K) :-
     revisa_oracion(Lista, K),
-    mostrar_palabras_aux(Lista, K),
-    write(".").
+    mostrar_palabras_aux(Lista, K).
 
 mostrar_palabras(_, _):-
     write("POR FAVOR, INGRESE UNA ORACION VALIDA").
+
+mostrar_palabras_aux([Palabra, "."|Resto], K):-
+    traducir(Palabra, K, 1),
+    mostrar_palabras_aux(Resto, K).
 
 %casos para numeros como Ochenta y ocho
 mostrar_palabras_aux([Palabra, "y", Palabra2|Resto], K) :-

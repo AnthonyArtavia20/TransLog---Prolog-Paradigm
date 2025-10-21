@@ -41,7 +41,7 @@ trad("la", "the").
 trad("amigos","friends").
 trad("amigo","friend").
 trad("gato","cat").
-
+trad("carro","car").
 
 trad("negro","black").
 
