@@ -29,13 +29,14 @@ trad("hola","hi").
 trad("yo", "i").
 trad("soy","am").
 trad("ella","she").
-trad("el","he").
+trad("él","he").
 trad("es","is").
 trad("son","are").
 
 trad("y", "and").
 
 trad("el","the").
+trad("la", "the").
 
 trad("amigos","friends").
 trad("amigo","friend").
@@ -43,6 +44,28 @@ trad("gato","cat").
 
 
 trad("negro","black").
+
+
+trad("niño","kid").
+trad("come","eats").
+trad("manzana","apple").
+
+%sujetos o nombres
+nom("niño").
+nom("kid").
+nom("manzana").
+nom("apple").
+
+%verbos
+verb("come").
+verb("eats").
+
+%determinantes
+deter("el").
+deter("the").
+deter("la").
+
+
 
 %palabras en singular
 sing("is").

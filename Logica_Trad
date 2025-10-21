@@ -65,15 +65,58 @@ traducir(X, K):-
 traducir(X, K):-
     K == 2,
     (trad(X, Y) ; generar_traduccion_compuesta(X, Y)),
-    write(Y),  !.
+    write(Y),
+    write(" "),
+    !.
 
 traducir(X, _):-
     write(X),
     write(" ").
 
+revisa_oracion([],_).
+
+revisa_oracion([Nom, Verb, Nom2|Resto], K):-
+    K = 2,
+    nom(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Nom, Verb, Nom2|Resto], K):-
+    K = 2,
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Nom, Verb, Det2, Nom2|Resto], K):-
+    K = 2,
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Nom, Verb, Det2, Nom2|Resto], K):-
+    K = 2,
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+
+
 % Lógica principal de procesamiento
 mostrar_palabras(Lista, K) :-
-    mostrar_palabras_aux(Lista, K).
+    revisa_oracion(Lista, K),
+    mostrar_palabras_aux(Lista, K),
+    write(".").
+
+mostrar_palabras(_, _):-
+    write("POR FAVOR, INGRESE UNA ORACION VALIDA").
 
 %casos para numeros como Ochenta y ocho
 mostrar_palabras_aux([Palabra, "y", Palabra2|Resto], K) :-
