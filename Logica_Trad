@@ -110,12 +110,72 @@ revisa_oracion([Nom, Verb, Nom2, "."|Resto], K):-
     nom(Nom2),
     revisa_oracion(Resto, K).
 
+revisa_oracion([Cant, Nom, Verb, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Cant, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+revisa_oracion([Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    nom(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+
 revisa_oracion([Det, Nom, Verb, Nom2, "."|Resto], K):-
     deter(Det),
     nom(Nom),
     verb(Verb),
     nom(Nom2),
     revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Cant, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Cant, Nom, Verb, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
 
 revisa_oracion([Det, Nom, Verb, Det2, Nom2, "."|Resto], K):-
     deter(Det),
@@ -125,11 +185,74 @@ revisa_oracion([Det, Nom, Verb, Det2, Nom2, "."|Resto], K):-
     nom(Nom2),
     revisa_oracion(Resto, K).
 
+revisa_oracion([Det, Cant, Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Cant, Nom, Verb, Det2, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+
 revisa_oracion([Nom, Verb, Det2, Nom2, "."|Resto], K):-
     nom(Nom),
     verb(Verb),
     deter(Det2),
     nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Cant, Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Cant, Nom, Verb, Det2, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
     revisa_oracion(Resto, K).
 
 
