@@ -4,7 +4,7 @@
 existe_lenguaje(X) :-
     lenguaje(X, _).
 
-% Caso para dieciseis - diecinueve (español -> inglés)
+% Caso para dieciseis - diecinueve (espa�ol -> ingl�s)
 generar_traduccion_compuesta(P, Traduccion) :-
     sub_string(P, 0, 5, RestoLen, "dieci"),
     RestoLen > 0,
@@ -12,7 +12,7 @@ generar_traduccion_compuesta(P, Traduccion) :-
     trad(Resto, TradResto),
     combinar_strings(TradResto, "teen", Traduccion).
 
-% Caso mejorado para inglés -> español
+% Caso mejorado para ingl�s -> espa�ol
 generar_traduccion_compuesta(P, Traduccion):-
     sub_string(P, _, 4, 0, "teen"),
     string_length(P, Len),
@@ -22,7 +22,7 @@ generar_traduccion_compuesta(P, Traduccion):-
     mapear_raiz_teen(Resto, RaizEspanol),
     combinar_strings("dieci", RaizEspanol, Traduccion).
 
-% Caso para veintiuno - veintinueve (español -> inglés)
+% Caso para veintiuno - veintinueve (espa�ol -> ingl�s)
 generar_traduccion_compuesta(P, Traduccion) :-
     sub_string(P, 0, 6, RestoLen, "veinti"),
     RestoLen > 0,
@@ -30,7 +30,7 @@ generar_traduccion_compuesta(P, Traduccion) :-
     trad(Resto, TradResto),
     combinar_strings("twenty", TradResto, Traduccion).
 
-% Mapeo completo de raíces teen a español
+% Mapeo completo de ra�ces teen a espa�ol
 mapear_raiz_teen("thir", "tre").
 mapear_raiz_teen("four", "cua").
 mapear_raiz_teen("fif", "quin").
@@ -44,7 +44,7 @@ mapear_raiz_teen(Resto, RaizEspanol) :-
     trad(TradResto, Resto),
     RaizEspanol = TradResto.
 
-% Función auxiliar para combinar strings
+% Funci�n auxiliar para combinar strings
 combinar_strings(String1, String2, Resultado) :-
     string_concat(String1, String2, Resultado).
 
@@ -55,7 +55,6 @@ separar(Texto, Palabras2) :-
 
 separar_aux([], []).
 
-% Manejar puntos
 separar_aux([H|T], R):-
     string_chars(H, Chars),
     append(Base, ['.'], Chars),
@@ -64,164 +63,42 @@ separar_aux([H|T], R):-
     separar_aux(T, Resto),
     R = [SinPunto, "."|Resto].
 
-% Manejar comas
-separar_aux([H|T], R):-
-    string_chars(H, Chars),
-    append(Base, [','], Chars),
-    !,
-    string_chars(SinComa, Base),
-    separar_aux(T, Resto),
-    R = [SinComa, ","|Resto].
-
 separar_aux([H|T], [H|Resto]):-
     separar_aux(T, Resto).
 
-% ============================================
-% TRADUCCIÓN CON SINÓNIMOS
-% ============================================
-
-% Traducción inglés → español (modo 1) con punto
-traducir(X, K, _):-
-    K == 1,
-    (trad(Y, X) ; buscar_sinonimo_traducir(X, Y, 1) ; generar_traduccion_compuesta(X, Y)),
-    write(Y),
-    write(". "),
-    !.
-
-% Traducción español → inglés (modo 2) con punto
-traducir(X, K, _):-
-    K == 2,
-    (trad(X, Y) ; buscar_sinonimo_traducir(X, Y, 2) ; generar_traduccion_compuesta(X, Y)),
-    write(Y),
-    write(". "),
-    !.
-
-% Traducción inglés → español (modo 1) sin punto
+% Traducci�n individual
 traducir(X, K):-
     K == 1,
-    (trad(Y, X) ; buscar_sinonimo_traducir(X, Y, 1) ; generar_traduccion_compuesta(X, Y)),
+    (trad(Y, X) ; generar_traduccion_compuesta(X, Y)),
     write(Y),
     write(' '),
     !.
 
-% Traducción español → inglés (modo 2) sin punto
 traducir(X, K):-
     K == 2,
-    (trad(X, Y) ; buscar_sinonimo_traducir(X, Y, 2) ; generar_traduccion_compuesta(X, Y)),
+    (trad(X, Y) ; generar_traduccion_compuesta(X, Y)),
     write(Y),
     write(" "),
     !.
 
-% Si no encuentra traducción, mostrar palabra original
 traducir(X, _):-
     write(X),
     write(" ").
 
-% ============================================
-% BÚSQUEDA DE SINÓNIMOS
-% ============================================
+traducir(X, K, _):-
+    K == 1,
+    trad(Y, X),
+    write(Y),
+    write(". ").
 
-% Modo 1: inglés → español
-buscar_sinonimo_traducir(X, Y, 1):-
-    sinonim(Z, X),  % Z es sinónimo de X
-    trad(Y, Z),     % Traducir el sinónimo Z
-    !.
+traducir(X, K, _):-
+    K == 2,
+    trad(X, Y),
+    write(Y),
+    write(". ").
 
-buscar_sinonimo_traducir(X, Y, 1):-
-    sinonim(X, Z),  % X es sinónimo de Z
-    trad(Y, Z),     % Traducir Z
-    !.
-
-% Modo 2: español → inglés
-buscar_sinonimo_traducir(X, Y, 2):-
-    sinonim(X, Z),  % X es sinónimo de Z
-    trad(Z, Y),     % Traducir el sinónimo Z
-    !.
-
-buscar_sinonimo_traducir(X, Y, 2):-
-    sinonim(Z, X),  % Z es sinónimo de X
-    trad(Z, Y),     % Traducir Z
-    !.
-
-% ============================================
-% FUNCIÓN PARA REVISAR ORACIONES
-% ============================================
-
+% Funcion para revisar oraciones (TODAS LAS REGLAS JUNTAS)
 revisa_oracion([],_).
-
-% ============================================
-% PATRONES CON NEGACIÓN
-% ============================================
-
-% Patrón: Nom + no/not + Verb + Nom
-revisa_oracion([Nom, Neg, Verb, Nom2, "."|Resto], K):-
-    nom(Nom),
-    neg(Neg),
-    verb(Verb),
-    nom(Nom2),
-    revisa_oracion(Resto, K).
-
-% Patrón: Det + Nom + no/not + Verb + Nom
-revisa_oracion([Det, Nom, Neg, Verb, Nom2, "."|Resto], K):-
-    deter(Det),
-    nom(Nom),
-    neg(Neg),
-    verb(Verb),
-    nom(Nom2),
-    revisa_oracion(Resto, K).
-
-% Patrón: Det + Nom + no/not + Verb + Det + Nom
-revisa_oracion([Det, Nom, Neg, Verb, Det2, Nom2, "."|Resto], K):-
-    deter(Det),
-    nom(Nom),
-    neg(Neg),
-    verb(Verb),
-    deter(Det2),
-    nom(Nom2),
-    revisa_oracion(Resto, K).
-
-% Patrón: Nom + Verb + Nom, Nom + no/not + Verb + Nom (oraciones compuestas)
-revisa_oracion([Nom, Verb, Nom2, ",", Nom3, Neg, Verb2, Nom4, "."|Resto], K):-
-    nom(Nom),
-    verb(Verb),
-    nom(Nom2),
-    nom(Nom3),
-    neg(Neg),
-    verb(Verb2),
-    nom(Nom4),
-    revisa_oracion(Resto, K).
-
-% Patrón: Det + Nom + Verb + Nom, Det + Nom + no/not + Verb + Nom
-revisa_oracion([Det, Nom, Verb, Nom2, ",", Det2, Nom3, Neg, Verb2, Nom4, "."|Resto], K):-
-    deter(Det),
-    nom(Nom),
-    verb(Verb),
-    nom(Nom2),
-    deter(Det2),
-    nom(Nom3),
-    neg(Neg),
-    verb(Verb2),
-    nom(Nom4),
-    revisa_oracion(Resto, K).
-
-% Patrón: Det + Nom + Verb + Det + Nom, Det + Nom + no/not + Verb + Det + Nom
-revisa_oracion([Det, Nom, Verb, Det2, Nom2, ",", Det3, Nom3, Neg, Verb2, Det4, Nom4, "."|Resto], K):-
-    deter(Det),
-    nom(Nom),
-    verb(Verb),
-    deter(Det2),
-    nom(Nom2),
-    deter(Det3),
-    nom(Nom3),
-    neg(Neg),
-    verb(Verb2),
-    deter(Det4),
-    nom(Nom4),
-    revisa_oracion(Resto, K).
-
-% ============================================
-% PATRONES BÁSICOS SIN NEGACIÓN
-% ============================================
 
 revisa_oracion([Nom, Verb, Nom2, "."|Resto], K):-
     nom(Nom),
@@ -367,10 +244,7 @@ revisa_oracion([Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
-% ============================================
-% CASOS PARA NÚMEROS CON "Y"
-% ============================================
-
+% CASOS PARA N�MEROS CON "Y"
 revisa_oracion([Num1, "y", Num2, Nom, Verb, "."|Resto], K):-
     num(Num1),
     num(Num2),
@@ -456,12 +330,8 @@ revisa_oracion([Det, Nom, Verb, Num1, "y", Num2, Det2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
-% ============================================
-% FRASES ESPECÍFICAS
-% ============================================
-
-% Para "feliz cumpleaños"
-revisa_oracion(["feliz", "cumpleaños", "."|Resto], K):-
+% Para "feliz cumplea�os"
+revisa_oracion(["feliz", "cumplea�os", "."|Resto], K):-
     revisa_oracion(Resto, K).
 
 % Para "happy birthday"
@@ -472,26 +342,24 @@ revisa_oracion(["happy", "birthday", "."|Resto], K):-
 revisa_oracion(["how", "old", "are", "you", "."|Resto], K):-
     revisa_oracion(Resto, K).
 
-% Para "cuántos años tienes"
-revisa_oracion(["cuántos", "años", "tienes", "."|Resto], K):-
+% Para "cu�ntos a�os tienes"
+revisa_oracion(["cu�ntos", "a�os", "tienes", "."|Resto], K):-
     revisa_oracion(Resto, K).
 
-% Patrón genérico para frases de 2 palabras
+% Patr�n gen�rico para frases de 2 palabras
 revisa_oracion([Pal1, Pal2, "."|Resto], K):-
     revisa_oracion(Resto, K).
 
-% Patrón genérico para frases de 3 palabras
+% Patr�n gen�rico para frases de 3 palabras
 revisa_oracion([Pal1, Pal2, Pal3, "."|Resto], K):-
     revisa_oracion(Resto, K).
 
-% Patrón genérico para frases de 4 palabras
+% Patr�n gen�rico para frases de 4 palabras
 revisa_oracion([Pal1, Pal2, Pal3, Pal4, "."|Resto], K):-
     revisa_oracion(Resto, K).
 
-% ============================================
-% BUSCAR FRASES COMPLETAS
-% ============================================
 
+% Buscar frases completas
 buscar_frase(Palabras, FraseTraducida, Resto, K) :-
     between(2, 5, Longitud),
     length(Frase, Longitud),
@@ -501,10 +369,7 @@ buscar_frase(Palabras, FraseTraducida, Resto, K) :-
      ; K == 2 -> trad_frase(FraseStr, FraseTraducida)
     ).
 
-% ============================================
-% LÓGICA PRINCIPAL DE PROCESAMIENTO
-% ============================================
-
+% L�gica principal de procesamiento
 mostrar_palabras(Lista, K) :-
     revisa_oracion(Lista, K),
     mostrar_palabras_aux(Lista, K).
@@ -512,23 +377,18 @@ mostrar_palabras(Lista, K) :-
 mostrar_palabras(_, _):-
     write("POR FAVOR, INGRESE UNA ORACION VALIDA").
 
-% ============================================
-% MOSTRAR PALABRAS AUXILIAR
-% ============================================
-
-% Buscar frases completas primero
+% TODAS LAS REGLAS DE mostrar_palabras_aux EN ORDEN CORRECTO
 mostrar_palabras_aux(Palabras, K) :-
     buscar_frase(Palabras, FraseTraducida, Resto, K),
     !,
     write(FraseTraducida), write(' '),
     mostrar_palabras_aux(Resto, K).
 
-% Palabra con punto
 mostrar_palabras_aux([Palabra, "."|Resto], K):-
     traducir(Palabra, K, 1),
     mostrar_palabras_aux(Resto, K).
 
-% Casos para números como Ochenta y ocho (español -> inglés)
+% Casos para n�meros como Ochenta y ocho (espa�ol -> ingl�s)
 mostrar_palabras_aux([Num1, "y", Num2|Resto], K) :-
     K == 2,
     num(Num1),
@@ -539,7 +399,7 @@ mostrar_palabras_aux([Num1, "y", Num2|Resto], K) :-
     write(TradCompuesta), write(' '),
     mostrar_palabras_aux(Resto, K).
 
-% Casos para números compuestos como "eighty eight" (inglés -> español)
+% Casos para n�meros compuestos como "eighty eight" (ingl�s -> espa�ol)
 mostrar_palabras_aux([Num1, Num2|Resto], K) :-
     K == 1,
     decena(Num1),
@@ -551,28 +411,28 @@ mostrar_palabras_aux([Num1, Num2|Resto], K) :-
     write(TradCompuesta), write(' '),
     mostrar_palabras_aux(Resto, K).
 
-% Casos específicos para frases comunes
-mostrar_palabras_aux(["feliz", "cumpleaños"|Resto], K):-
+% Casos espec�ficos para frases comunes (AGREGA M�S SEG�N NECESITES)
+mostrar_palabras_aux(["feliz", "cumplea�os"|Resto], K):-
     K == 2,
     write("happy birthday "),
     mostrar_palabras_aux(Resto, K).
 
 mostrar_palabras_aux(["happy", "birthday"|Resto], K):-
     K == 1,
-    write("feliz cumpleaños "),
+    write("feliz cumplea�os "),
     mostrar_palabras_aux(Resto, K).
 
 mostrar_palabras_aux(["how", "old", "are", "you"|Resto], K):-
     K == 1,
-    write("cuántos años tienes "),
+    write("cu�ntos a�os tienes "),
     mostrar_palabras_aux(Resto, K).
 
-mostrar_palabras_aux(["cuántos", "años", "tienes"|Resto], K):-
+mostrar_palabras_aux(["cu�ntos", "a�os", "tienes"|Resto], K):-
     K == 2,
     write("how old are you "),
     mostrar_palabras_aux(Resto, K).
 
-% Resto de casos específicos
+% Resto de casos espec�ficos
 mostrar_palabras_aux([Palabra, "are", Palabra2|Resto], K):-
     K == 1,
     Palabra2 == "we",
@@ -638,10 +498,7 @@ mostrar_palabras_aux([Palabra|Resto], K) :-
 % CASO BASE
 mostrar_palabras_aux([], _).
 
-% ============================================
-% FUNCIONES AUXILIARES PARA COMBINAR NÚMEROS
-% ============================================
-
+% FUNCIONES AUXILIARES PARA COMBINAR N�MEROS
 combinar_numeros(Num1, Num2, Resultado) :-
     string_concat(Num1, " ", Temp),
     string_concat(Temp, Num2, Resultado).

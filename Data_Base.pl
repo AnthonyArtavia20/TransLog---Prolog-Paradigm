@@ -1,3 +1,4 @@
+:- encoding(utf8).
 % Base de datos de traducciones español-inglés - VERSIÓN EXPANDIDA
 
 % ============================================
@@ -914,10 +915,8 @@ num_compuesto("veinticinco"). num_compuesto("veintiseis").
 num_compuesto("veintisiete"). num_compuesto("veintiocho").
 num_compuesto("veintinueve").
 
-% ============================================
-% LENGUAJES SOPORTADOS
-% ============================================
-lenguaje("ingles", 1).
-lenguaje("español", 2).
-lenguaje("english", 1).
+% Lenguajes soportados 
+lenguaje("ingles", 1). 
+lenguaje("español", 2). 
+lenguaje("english", 1). 
 lenguaje("spanish", 2).
