@@ -4,7 +4,7 @@
 existe_lenguaje(X) :-
     lenguaje(X, _).
 
-% Caso para dieciseis - diecinueve (espaÃ±ol -> inglÃ©s)
+% Caso para dieciseis - diecinueve (español -> inglés)
 generar_traduccion_compuesta(P, Traduccion) :-
     sub_string(P, 0, 5, RestoLen, "dieci"),
     RestoLen > 0,
@@ -12,7 +12,7 @@ generar_traduccion_compuesta(P, Traduccion) :-
     trad(Resto, TradResto),
     combinar_strings(TradResto, "teen", Traduccion).
 
-% Caso mejorado para inglÃ©s -> espaÃ±ol
+% Caso mejorado para inglés -> español
 generar_traduccion_compuesta(P, Traduccion):-
     sub_string(P, _, 4, 0, "teen"),
     string_length(P, Len),
@@ -22,8 +22,7 @@ generar_traduccion_compuesta(P, Traduccion):-
     mapear_raiz_teen(Resto, RaizEspanol),
     combinar_strings("dieci", RaizEspanol, Traduccion).
 
-
-% Caso para veintiuno - veintinueve (espaÃ±ol -> inglÃ©s)
+% Caso para veintiuno - veintinueve (español -> inglés)
 generar_traduccion_compuesta(P, Traduccion) :-
     sub_string(P, 0, 6, RestoLen, "veinti"),
     RestoLen > 0,
@@ -31,7 +30,7 @@ generar_traduccion_compuesta(P, Traduccion) :-
     trad(Resto, TradResto),
     combinar_strings("twenty", TradResto, Traduccion).
 
-% Mapeo completo de raÃ­ces teen a espaÃ±ol
+% Mapeo completo de raíces teen a español
 mapear_raiz_teen("thir", "tre").
 mapear_raiz_teen("four", "cua").
 mapear_raiz_teen("fif", "quin").
@@ -45,8 +44,7 @@ mapear_raiz_teen(Resto, RaizEspanol) :-
     trad(TradResto, Resto),
     RaizEspanol = TradResto.
 
-
-% FunciÃ³n auxiliar para combinar strings
+% Función auxiliar para combinar strings
 combinar_strings(String1, String2, Resultado) :-
     string_concat(String1, String2, Resultado).
 
@@ -68,7 +66,7 @@ separar_aux([H|T], R):-
 separar_aux([H|T], [H|Resto]):-
     separar_aux(T, Resto).
 
-% TraducciÃ³n individual
+% Traducción individual
 traducir(X, K):-
     K == 1,
     (trad(Y, X) ; generar_traduccion_compuesta(X, Y)),
@@ -99,9 +97,7 @@ traducir(X, K, _):-
     write(Y),
     write(". ").
 
-
-%Funcion para revisar oraciones
-
+% Funcion para revisar oraciones (TODAS LAS REGLAS JUNTAS)
 revisa_oracion([],_).
 
 revisa_oracion([Nom, Verb, Nom2, "."|Resto], K):-
@@ -128,7 +124,6 @@ revisa_oracion([Cant, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
-
 revisa_oracion([Nom, Verb, Cant2, Nom2, "."|Resto], K):-
     nom(Nom),
     verb(Verb),
@@ -136,8 +131,6 @@ revisa_oracion([Nom, Verb, Cant2, Nom2, "."|Resto], K):-
     nom(Nom2),
     plur(Nom2),
     revisa_oracion(Resto, K).
-
-
 
 revisa_oracion([Det, Nom, Verb, Nom2, "."|Resto], K):-
     deter(Det),
@@ -174,8 +167,6 @@ revisa_oracion([Det, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
     nom(Nom2),
     plur(Nom2),
     revisa_oracion(Resto, K).
-
-
 
 revisa_oracion([Det, Nom, Verb, Det2, Nom2, "."|Resto], K):-
     deter(Det),
@@ -217,8 +208,6 @@ revisa_oracion([Det, Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
-
-
 revisa_oracion([Nom, Verb, Det2, Nom2, "."|Resto], K):-
     nom(Nom),
     verb(Verb),
@@ -255,7 +244,7 @@ revisa_oracion([Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
-% Patrón: [Num1, "y", Num2, Nom, Verb, "."]
+% CASOS PARA NÚMEROS CON "Y"
 revisa_oracion([Num1, "y", Num2, Nom, Verb, "."|Resto], K):-
     num(Num1),
     num(Num2),
@@ -263,7 +252,6 @@ revisa_oracion([Num1, "y", Num2, Nom, Verb, "."|Resto], K):-
     verb(Verb),
     revisa_oracion(Resto, K).
 
-% Patrón: [Num1, "y", Num2, Nom, Verb, Nom2, "."]
 revisa_oracion([Num1, "y", Num2, Nom, Verb, Nom2, "."|Resto], K):-
     num(Num1),
     num(Num2),
@@ -272,7 +260,6 @@ revisa_oracion([Num1, "y", Num2, Nom, Verb, Nom2, "."|Resto], K):-
     nom(Nom2),
     revisa_oracion(Resto, K).
 
-% Patrón: [Det, Num1, "y", Num2, Nom, Verb, "."]
 revisa_oracion([Det, Num1, "y", Num2, Nom, Verb, "."|Resto], K):-
     deter(Det),
     num(Num1),
@@ -282,7 +269,6 @@ revisa_oracion([Det, Num1, "y", Num2, Nom, Verb, "."|Resto], K):-
     verb(Verb),
     revisa_oracion(Resto, K).
 
-% Patrón: [Det, Num1, "y", Num2, Nom, Verb, Nom2, "."]
 revisa_oracion([Det, Num1, "y", Num2, Nom, Verb, Nom2, "."|Resto], K):-
     deter(Det),
     num(Num1),
@@ -293,7 +279,6 @@ revisa_oracion([Det, Num1, "y", Num2, Nom, Verb, Nom2, "."|Resto], K):-
     nom(Nom2),
     revisa_oracion(Resto, K).
 
-% Patrón: [Num1, "y", Num2, Nom, Verb, Det2, Nom2, "."]
 revisa_oracion([Num1, "y", Num2, Nom, Verb, Det2, Nom2, "."|Resto], K):-
     num(Num1),
     num(Num2),
@@ -304,9 +289,6 @@ revisa_oracion([Num1, "y", Num2, Nom, Verb, Det2, Nom2, "."|Resto], K):-
     nom(Nom2),
     revisa_oracion(Resto, K).
 
-% CASOS ADICIONALES PARA NÚMEROS CON "Y" - ALEX
-
-% Patrón: [Det, Nom, Verb, Num1, "y", Num2, Nom2, "."]
 revisa_oracion([Det, Nom, Verb, Num1, "y", Num2, Nom2, "."|Resto], K):-
     deter(Det),
     nom(Nom),
@@ -318,7 +300,6 @@ revisa_oracion([Det, Nom, Verb, Num1, "y", Num2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
-% Patrón: [Det, Nom, Verb, Num1, "y", Num2, Nom2, "."] (sin plural)
 revisa_oracion([Det, Nom, Verb, Num1, "y", Num2, Nom2, "."|Resto], K):-
     deter(Det),
     nom(Nom),
@@ -328,7 +309,6 @@ revisa_oracion([Det, Nom, Verb, Num1, "y", Num2, Nom2, "."|Resto], K):-
     nom(Nom2),
     revisa_oracion(Resto, K).
 
-% Patrón: [Nom, Verb, Num1, "y", Num2, Nom2, "."]
 revisa_oracion([Nom, Verb, Num1, "y", Num2, Nom2, "."|Resto], K):-
     nom(Nom),
     verb(Verb),
@@ -338,7 +318,6 @@ revisa_oracion([Nom, Verb, Num1, "y", Num2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
-% Patrón: [Det, Nom, Verb, Num1, "y", Num2, Det2, Nom2, "."]
 revisa_oracion([Det, Nom, Verb, Num1, "y", Num2, Det2, Nom2, "."|Resto], K):-
     deter(Det),
     nom(Nom),
@@ -351,8 +330,46 @@ revisa_oracion([Det, Nom, Verb, Num1, "y", Num2, Det2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
+% Para "feliz cumpleaños"
+revisa_oracion(["feliz", "cumpleaños", "."|Resto], K):-
+    revisa_oracion(Resto, K).
 
-% LÃ³gica principal de procesamiento
+% Para "happy birthday"
+revisa_oracion(["happy", "birthday", "."|Resto], K):-
+    revisa_oracion(Resto, K).
+
+% Para "how old are you"
+revisa_oracion(["how", "old", "are", "you", "."|Resto], K):-
+    revisa_oracion(Resto, K).
+
+% Para "cuántos años tienes"
+revisa_oracion(["cuántos", "años", "tienes", "."|Resto], K):-
+    revisa_oracion(Resto, K).
+
+% Patrón genérico para frases de 2 palabras
+revisa_oracion([Pal1, Pal2, "."|Resto], K):-
+    revisa_oracion(Resto, K).
+
+% Patrón genérico para frases de 3 palabras
+revisa_oracion([Pal1, Pal2, Pal3, "."|Resto], K):-
+    revisa_oracion(Resto, K).
+
+% Patrón genérico para frases de 4 palabras
+revisa_oracion([Pal1, Pal2, Pal3, Pal4, "."|Resto], K):-
+    revisa_oracion(Resto, K).
+
+
+% Buscar frases completas
+buscar_frase(Palabras, FraseTraducida, Resto, K) :-
+    between(2, 5, Longitud),
+    length(Frase, Longitud),
+    append(Frase, Resto, Palabras),
+    atomic_list_concat(Frase, ' ', FraseStr),
+    (K == 1 -> trad_frase(FraseStr, FraseTraducida)
+     ; K == 2 -> trad_frase(FraseStr, FraseTraducida)
+    ).
+
+% Lógica principal de procesamiento
 mostrar_palabras(Lista, K) :-
     revisa_oracion(Lista, K),
     mostrar_palabras_aux(Lista, K).
@@ -360,13 +377,20 @@ mostrar_palabras(Lista, K) :-
 mostrar_palabras(_, _):-
     write("POR FAVOR, INGRESE UNA ORACION VALIDA").
 
+% TODAS LAS REGLAS DE mostrar_palabras_aux EN ORDEN CORRECTO
+mostrar_palabras_aux(Palabras, K) :-
+    buscar_frase(Palabras, FraseTraducida, Resto, K),
+    !,
+    write(FraseTraducida), write(' '),
+    mostrar_palabras_aux(Resto, K).
+
 mostrar_palabras_aux([Palabra, "."|Resto], K):-
     traducir(Palabra, K, 1),
     mostrar_palabras_aux(Resto, K).
 
-%casos para numeros como Ochenta y ocho
+% Casos para números como Ochenta y ocho (español -> inglés)
 mostrar_palabras_aux([Num1, "y", Num2|Resto], K) :-
-    K == 2, % Desde español
+    K == 2,
     num(Num1),
     num(Num2),
     trad(Num1, Trad1),
@@ -377,7 +401,7 @@ mostrar_palabras_aux([Num1, "y", Num2|Resto], K) :-
 
 % Casos para números compuestos como "eighty eight" (inglés -> español)
 mostrar_palabras_aux([Num1, Num2|Resto], K) :-
-    K == 1, % Desde inglés
+    K == 1,
     decena(Num1),
     num(Num2),
     \+ member(Num2, ["twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety","onehundred"]),
@@ -387,23 +411,28 @@ mostrar_palabras_aux([Num1, Num2|Resto], K) :-
     write(TradCompuesta), write(' '),
     mostrar_palabras_aux(Resto, K).
 
-% Combinar números en inglés (ej: "eighty" + "eight" = "eighty eight")
-combinar_numeros(Num1, Num2, Resultado) :-
-    string_concat(Num1, " ", Temp),
-    string_concat(Temp, Num2, Resultado).
-
-% Combinar números en español (ej: "ochenta" + "ocho" = "ochenta y ocho")
-combinar_numeros_espanol(Num1, Num2, Resultado) :-
-    string_concat(Num1, " y ", Temp),
-    string_concat(Temp, Num2, Resultado).
-
-mostrar_palabras_aux([Palabra|Resto], K) :-
-    \+ (K == 1, decena(Palabra), Resto = [Next|_], num(Next)),
-    \+ (K == 2, num(Palabra), Resto = ["y"|_]),
-    traducir(Palabra, K),
+% Casos específicos para frases comunes (AGREGA MÁS SEGÚN NECESITES)
+mostrar_palabras_aux(["feliz", "cumpleaños"|Resto], K):-
+    K == 2,
+    write("happy birthday "),
     mostrar_palabras_aux(Resto, K).
 
-%caso para cuando se escribe we are/nosotros somos
+mostrar_palabras_aux(["happy", "birthday"|Resto], K):-
+    K == 1,
+    write("feliz cumpleaños "),
+    mostrar_palabras_aux(Resto, K).
+
+mostrar_palabras_aux(["how", "old", "are", "you"|Resto], K):-
+    K == 1,
+    write("cuántos años tienes "),
+    mostrar_palabras_aux(Resto, K).
+
+mostrar_palabras_aux(["cuántos", "años", "tienes"|Resto], K):-
+    K == 2,
+    write("how old are you "),
+    mostrar_palabras_aux(Resto, K).
+
+% Resto de casos específicos
 mostrar_palabras_aux([Palabra, "are", Palabra2|Resto], K):-
     K == 1,
     Palabra2 == "we",
@@ -434,8 +463,6 @@ mostrar_palabras_aux([ "the", Palabra|Resto], K):-
     mostrar_palabras_aux(Resto, K),
     traducir(Palabra, K).
 
-
-%casos para cuando se escribe they are/ellos son
 mostrar_palabras_aux([Palabra, "are" |Resto], K):-
     K == 1,
     Palabra == "they",
@@ -449,7 +476,6 @@ mostrar_palabras_aux([Palabra, "son", Palabra2|Resto], K):-
     traducir(Palabra, K),
     mostrar_palabras_aux(Resto, K).
 
-%caso para mi singular/ my singular
 mostrar_palabras_aux([ "my", Palabra|Resto], K):-
     K == 1,
     sing(Palabra),
@@ -457,8 +483,6 @@ mostrar_palabras_aux([ "my", Palabra|Resto], K):-
     traducir(Palabra, K),
     mostrar_palabras_aux(Resto, K).
 
-
-%caso para mis plural/ my plural
 mostrar_palabras_aux(["my", Palabra|Resto], K):-
     K == 1,
     plur(Palabra),
@@ -466,10 +490,19 @@ mostrar_palabras_aux(["my", Palabra|Resto], K):-
     traducir(Palabra, K),
     mostrar_palabras_aux(Resto, K).
 
-
-
+% REGLA GENERAL (sin condiciones complejas)
 mostrar_palabras_aux([Palabra|Resto], K) :-
     traducir(Palabra, K),
     mostrar_palabras_aux(Resto, K).
 
+% CASO BASE
 mostrar_palabras_aux([], _).
+
+% FUNCIONES AUXILIARES PARA COMBINAR NÚMEROS
+combinar_numeros(Num1, Num2, Resultado) :-
+    string_concat(Num1, " ", Temp),
+    string_concat(Temp, Num2, Resultado).
+
+combinar_numeros_espanol(Num1, Num2, Resultado) :-
+    string_concat(Num1, " y ", Temp),
+    string_concat(Temp, Num2, Resultado).

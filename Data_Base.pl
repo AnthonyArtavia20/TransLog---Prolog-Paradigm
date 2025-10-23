@@ -121,6 +121,14 @@ plur("comen").
 plur("los").
 plur("eats").
 
+%Frases
+trad_frase("feliz cumpleaños", "happy birthday").
+trad_frase("cuántos años tienes", "how old are you").
+trad_frase("buenos días", "good morning").
+
+trad_frase("happy birthday", "feliz cumpleaños").
+trad_frase("how old are you", "cuántos años tienes").
+trad_frase("good morning", "buenos días").
 
 % Lista completa de nï¿½meros reconocidos
 num("uno").
