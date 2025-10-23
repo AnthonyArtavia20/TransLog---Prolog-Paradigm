@@ -45,14 +45,16 @@ trad("carro","car").
 
 trad("negro","black").
 
-
+trad("niños","kids").
 trad("niño","kid").
 trad("come","eats").
 trad("manzana","apple").
 
 %sujetos o nombres
 nom("niño").
+nom("niños").
 nom("kid").
+nom("kids").
 nom("manzana").
 nom("apple").
 nom("amigos").
@@ -89,7 +91,8 @@ sing("apple").
 plur("are").
 plur("amigos").
 plur("friends").
-
+plur("kids").
+plur("niños").
 
 % Lista completa de números reconocidos
 num("uno").
