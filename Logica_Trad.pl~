@@ -255,6 +255,54 @@ revisa_oracion([Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
     plur(Nom2),
     revisa_oracion(Resto, K).
 
+% Patrón: [Num1, "y", Num2, Nom, Verb, "."]
+revisa_oracion([Num1, "y", Num2, Nom, Verb, "."|Resto], K):-
+    num(Num1),
+    num(Num2),
+    nom(Nom),
+    verb(Verb),
+    revisa_oracion(Resto, K).
+
+% Patrón: [Num1, "y", Num2, Nom, Verb, Nom2, "."]
+revisa_oracion([Num1, "y", Num2, Nom, Verb, Nom2, "."|Resto], K):-
+    num(Num1),
+    num(Num2),
+    nom(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+% Patrón: [Det, Num1, "y", Num2, Nom, Verb, "."]
+revisa_oracion([Det, Num1, "y", Num2, Nom, Verb, "."|Resto], K):-
+    deter(Det),
+    num(Num1),
+    num(Num2),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    revisa_oracion(Resto, K).
+
+% Patrón: [Det, Num1, "y", Num2, Nom, Verb, Nom2, "."]
+revisa_oracion([Det, Num1, "y", Num2, Nom, Verb, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Num1),
+    num(Num2),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+% Patrón: [Num1, "y", Num2, Nom, Verb, Det2, Nom2, "."]
+revisa_oracion([Num1, "y", Num2, Nom, Verb, Det2, Nom2, "."|Resto], K):-
+    num(Num1),
+    num(Num2),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
 
 
 % LÃ³gica principal de procesamiento
@@ -270,12 +318,43 @@ mostrar_palabras_aux([Palabra, "."|Resto], K):-
     mostrar_palabras_aux(Resto, K).
 
 %casos para numeros como Ochenta y ocho
-mostrar_palabras_aux([Palabra, "y", Palabra2|Resto], K) :-
-    K == 2,
-    num(Palabra),
-    num(Palabra2),
-    mostrar_palabras_aux([Palabra2|Resto], K),
-    traducir(Palabra, K).
+mostrar_palabras_aux([Num1, "y", Num2|Resto], K) :-
+    K == 2, % Desde español
+    num(Num1),
+    num(Num2),
+    trad(Num1, Trad1),
+    trad(Num2, Trad2),
+    combinar_numeros(Trad1, Trad2, TradCompuesta),
+    write(TradCompuesta), write(' '),
+    mostrar_palabras_aux(Resto, K).
+
+% Casos para números compuestos como "eighty eight" (inglés -> español)
+mostrar_palabras_aux([Num1, Num2|Resto], K) :-
+    K == 1, % Desde inglés
+    decena(Num1),
+    num(Num2),
+    \+ member(Num2, ["twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety","onehundred"]),
+    trad(Trad1, Num1),
+    trad(Trad2, Num2),
+    combinar_numeros_espanol(Trad1, Trad2, TradCompuesta),
+    write(TradCompuesta), write(' '),
+    mostrar_palabras_aux(Resto, K).
+
+% Combinar números en inglés (ej: "eighty" + "eight" = "eighty eight")
+combinar_numeros(Num1, Num2, Resultado) :-
+    string_concat(Num1, " ", Temp),
+    string_concat(Temp, Num2, Resultado).
+
+% Combinar números en español (ej: "ochenta" + "ocho" = "ochenta y ocho")
+combinar_numeros_espanol(Num1, Num2, Resultado) :-
+    string_concat(Num1, " y ", Temp),
+    string_concat(Temp, Num2, Resultado).
+
+mostrar_palabras_aux([Palabra|Resto], K) :-
+    \+ (K == 1, decena(Palabra), Resto = [Next|_], num(Next)),
+    \+ (K == 2, num(Palabra), Resto = ["y"|_]),
+    traducir(Palabra, K),
+    mostrar_palabras_aux(Resto, K).
 
 %caso para cuando se escribe we are/nosotros somos
 mostrar_palabras_aux([Palabra, "are", Palabra2|Resto], K):-

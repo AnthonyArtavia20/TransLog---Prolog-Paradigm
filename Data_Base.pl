@@ -192,6 +192,8 @@ decena("eighty").
 decena("ninety").
 decena("onehundred").
 
+num_compuesto("veintiuno").
+num_compuesto("veintidos").
 
 % Lenguajes soportados
 lenguaje("ingles", 1).
