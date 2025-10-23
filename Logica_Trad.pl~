@@ -1,0 +1,349 @@
+:- include('Data_Base.pl').
+
+% Verificar si existe un lenguaje
+existe_lenguaje(X) :-
+    lenguaje(X, _).
+
+% Caso para dieciseis - diecinueve (español -> inglés)
+generar_traduccion_compuesta(P, Traduccion) :-
+    sub_string(P, 0, 5, RestoLen, "dieci"),
+    RestoLen > 0,
+    sub_string(P, 5, RestoLen, 0, Resto),
+    trad(Resto, TradResto),
+    combinar_strings(TradResto, "teen", Traduccion).
+
+% Caso mejorado para inglés -> español
+generar_traduccion_compuesta(P, Traduccion):-
+    sub_string(P, _, 4, 0, "teen"),
+    string_length(P, Len),
+    Len > 4,
+    SubLen is Len - 4,
+    sub_string(P, 0, SubLen, 4, Resto),
+    mapear_raiz_teen(Resto, RaizEspanol),
+    combinar_strings("dieci", RaizEspanol, Traduccion).
+
+
+% Caso para veintiuno - veintinueve (español -> inglés)
+generar_traduccion_compuesta(P, Traduccion) :-
+    sub_string(P, 0, 6, RestoLen, "veinti"),
+    RestoLen > 0,
+    sub_string(P, 6, RestoLen, 0, Resto),
+    trad(Resto, TradResto),
+    combinar_strings("twenty", TradResto, Traduccion).
+
+% Mapeo completo de raíces teen a español
+mapear_raiz_teen("thir", "tre").
+mapear_raiz_teen("four", "cua").
+mapear_raiz_teen("fif", "quin").
+mapear_raiz_teen("six", "seis").
+mapear_raiz_teen("seven", "siete").
+mapear_raiz_teen("eigh", "diecio").
+mapear_raiz_teen("nine", "nueve").
+
+% Para casos regulares que coinciden con traducciones existentes
+mapear_raiz_teen(Resto, RaizEspanol) :-
+    trad(TradResto, Resto),
+    RaizEspanol = TradResto.
+
+
+% Función auxiliar para combinar strings
+combinar_strings(String1, String2, Resultado) :-
+    string_concat(String1, String2, Resultado).
+
+% Separar texto en palabras
+separar(Texto, Palabras2) :-
+    split_string(Texto, " ", "", Palabras),
+    separar_aux(Palabras, Palabras2).
+
+separar_aux([], []).
+
+separar_aux([H|T], R):-
+    string_chars(H, Chars),
+    append(Base, ['.'], Chars),
+    !,
+    string_chars(SinPunto, Base),
+    separar_aux(T, Resto),
+    R = [SinPunto, "."|Resto].
+
+separar_aux([H|T], [H|Resto]):-
+    separar_aux(T, Resto).
+
+% Traducción individual
+traducir(X, K):-
+    K == 1,
+    (trad(Y, X) ; generar_traduccion_compuesta(X, Y)),
+    write(Y),
+    write(' '),
+    !.
+
+traducir(X, K):-
+    K == 2,
+    (trad(X, Y) ; generar_traduccion_compuesta(X, Y)),
+    write(Y),
+    write(" "),
+    !.
+
+traducir(X, _):-
+    write(X),
+    write(" ").
+
+traducir(X, K, _):-
+    K == 1,
+    trad(Y, X),
+    write(Y),
+    write(". ").
+
+traducir(X, K, _):-
+    K == 2,
+    trad(X, Y),
+    write(Y),
+    write(". ").
+
+
+%Funcion para revisar oraciones
+
+revisa_oracion([],_).
+
+revisa_oracion([Nom, Verb, Nom2, "."|Resto], K):-
+    nom(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Cant, Nom, Verb, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Cant, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+revisa_oracion([Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    nom(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+
+revisa_oracion([Det, Nom, Verb, Nom2, "."|Resto], K):-
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Cant, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Cant, Nom, Verb, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Nom, Verb, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+
+revisa_oracion([Det, Nom, Verb, Det2, Nom2, "."|Resto], K):-
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Cant, Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Cant, Nom, Verb, Det2, Nom2, "."|Resto], K):-
+    deter(Det),
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Det, Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    deter(Det),
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+
+revisa_oracion([Nom, Verb, Det2, Nom2, "."|Resto], K):-
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Cant, Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Cant, Nom, Verb, Det2, Nom2, "."|Resto], K):-
+    num(Cant),
+    nom(Nom),
+    plur(Nom),
+    verb(Verb),
+    deter(Det2),
+    nom(Nom2),
+    revisa_oracion(Resto, K).
+
+revisa_oracion([Nom, Verb, Det2, Cant2, Nom2, "."|Resto], K):-
+    nom(Nom),
+    verb(Verb),
+    deter(Det2),
+    num(Cant2),
+    nom(Nom2),
+    plur(Nom2),
+    revisa_oracion(Resto, K).
+
+
+
+% Lógica principal de procesamiento
+mostrar_palabras(Lista, K) :-
+    revisa_oracion(Lista, K),
+    mostrar_palabras_aux(Lista, K).
+
+mostrar_palabras(_, _):-
+    write("POR FAVOR, INGRESE UNA ORACION VALIDA").
+
+mostrar_palabras_aux([Palabra, "."|Resto], K):-
+    traducir(Palabra, K, 1),
+    mostrar_palabras_aux(Resto, K).
+
+%casos para numeros como Ochenta y ocho
+mostrar_palabras_aux([Palabra, "y", Palabra2|Resto], K) :-
+    K == 2,
+    num(Palabra),
+    num(Palabra2),
+    mostrar_palabras_aux([Palabra2|Resto], K),
+    traducir(Palabra, K).
+
+%caso para cuando se escribe we are/nosotros somos
+mostrar_palabras_aux([Palabra, "are", Palabra2|Resto], K):-
+    K == 1,
+    Palabra2 == "we",
+    write("nosotros somos "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+
+mostrar_palabras_aux([Palabra, "somos", Palabra2|Resto], K):-
+    K == 2,
+    Palabra2 == "nosotros",
+    write("we are "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+
+mostrar_palabras_aux([ "the", Palabra|Resto], K):-
+    K == 1,
+    fem(Palabra),
+    sing(Palabra),
+    write("la "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+
+mostrar_palabras_aux([ "the", Palabra|Resto], K):-
+    K == 1,
+    mas(Palabra),
+    sing(Palabra),
+    write("el "),
+    mostrar_palabras_aux(Resto, K),
+    traducir(Palabra, K).
+
+
+%casos para cuando se escribe they are/ellos son
+mostrar_palabras_aux([Palabra, "are" |Resto], K):-
+    K == 1,
+    Palabra == "they",
+    write("ellos son "),
+    mostrar_palabras_aux(Resto, K).
+
+mostrar_palabras_aux([Palabra, "son", Palabra2|Resto], K):-
+    K == 2,
+    Palabra2 == "ellos",
+    write("they are "),
+    traducir(Palabra, K),
+    mostrar_palabras_aux(Resto, K).
+
+%caso para mi singular/ my singular
+mostrar_palabras_aux([ "my", Palabra|Resto], K):-
+    K == 1,
+    sing(Palabra),
+    write("mi "),
+    traducir(Palabra, K),
+    mostrar_palabras_aux(Resto, K).
+
+
+%caso para mis plural/ my plural
+mostrar_palabras_aux(["my", Palabra|Resto], K):-
+    K == 1,
+    plur(Palabra),
+    write("mis "),
+    traducir(Palabra, K),
+    mostrar_palabras_aux(Resto, K).
+
+
+
+mostrar_palabras_aux([Palabra|Resto], K) :-
+    traducir(Palabra, K),
+    mostrar_palabras_aux(Resto, K).
+
+mostrar_palabras_aux([], _).
